@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXAMPLE weather app</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="#">Melokii</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item location_list_container">
+                    <p class="nav-link">Saved Locations</p>
+                    <ul id="location_list">
+                        <li class="location_list_item">Lorem, ipsum dolor.</li>
+                        <li class="location_list_item">Lorem ipsum dolor sit.</li>
+                    </ul>
+                </li>
+                <!-- <li class="nav-item">
+                    <a href="temp.html" class="nav-link"></a>
+                </li> -->
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+    <article id="main">
+        <section id="basic_info">
+            <span>
+                <h1 id="display_cityname">lorem</h1>
+                <p id="display_position">Lorem ipsum dolor sit amet.</p>
+            </span>
+            <span>
+                <h1 id="display_temperature">99F</h1>
+            </span>
+        </section>
+    </article>
+
+    <script type="module" src="main.js"></script>
+    <script src="content_layout.js"></script>
+</body>
+</html>
