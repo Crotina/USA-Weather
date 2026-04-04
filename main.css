@@ -1,28 +1,40 @@
+:root {
+    --light-blue: #b5ccff;
+    --normal-blue: #39538b;
 
+    --regular-white: #fff9f6;
+}
 *{
     padding: 0px;
     margin: 0px;
 }
+
+body {
+    height: 100vh;
+    background: linear-gradient(0deg, var(--normal-blue), var(--light-blue));
+}
+
 .navbar {
-    background-color: #fff9f6;
+    background-color: var(--regular-white);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 100;
-    height: 10vh;
+    min-width: 100vw;
 }
 
 .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 2.5rem; /* 增大padding */
+    padding: 1.5rem 1rem; /* 增大padding */
+    max-width: 100%;
 }
 
 .logo a {
     font-size: 2rem; /* 从1.5rem增加到2rem */
     font-weight: bold;
-    color: #2563eb;
+    color: var(--normal-blue);
     text-decoration: none;
     text-wrap-mode: nowrap;
     text-overflow: clip;
@@ -38,7 +50,7 @@
     right: -100%;
     top: 70px;
     flex-direction: column;
-    background-color: #fff;
+    background-color: var(--regular-white);
     width: 25%;
     /* text-align: center; */
     transition: 0.3s;
@@ -57,7 +69,6 @@
 }
 
 .nav-link {
-    color: #333;
     text-decoration: none;
     font-weight: 500;
     font-size: 1.5rem;
@@ -83,25 +94,38 @@ a.nav-link.active {
     margin: 3px 0;
     transition: 0.3s;
 }
-@media screen and (max-width: 768px) {
-    .nav-menu {
-        width: 90%;
-    }
+
+#main_temperature {
+    font-size: 3rem;
 }
+#main_cityname {
+    font-size: 3rem;
+}
+
+
 
 .location_list_container {
     display: flex;
     flex-direction: column;
 }
+#location_list:empty::after {
+    content: 'No Saved City';
+    color: #595959;
+}
 #location_list .location_list_item {
     border: 1px solid #000;
     margin: 5px 0;
     padding: 4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 article#main {
-    height: 90vh;
-    padding: 10px;
+    /* height: 90vh; */
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px;
 }
 #main > section {
     display: flex;
@@ -109,4 +133,103 @@ article#main {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    border-radius: 25px;
+    padding: 20px;
+    background-color: #fff9f6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.17);
+}
+section#wind_info {
+    padding: 5px;
+    justify-content: space-around;
+}
+section#wind_info > .wind_info_parts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+section#hourly_forecast {
+    flex-direction: column;
+    align-items: flex-start;
+}
+#hourly_forecast_list {
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    width: 100%;
+    overflow: auto;
+}
+#hourly_forecast_list > .hourly_forecast_item {
+    border-radius: 10px;
+    border: 1px solid #000;
+    min-width: 5rem;
+    max-width: 5rem;
+    margin: 0 5px;
+}
+#hourly_forecast_list > .hourly_forecast_item img {
+    border-radius: 10px 10px 0px 0px;
+    width: 100%;
+}
+#hourly_forecast_list > .hourly_forecast_item .hourly_forecast_item_detail {
+    text-align: center;
+}
+
+.tab {
+    /* width: 500px; */
+    overflow: hidden;
+    /* border: 1px solid black; */
+}
+
+.tab button {
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    outline: none;
+    padding: 10px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+/* .tab button:hover {
+    background: rgb(165, 5, 5);
+} */
+
+.tab button.active {
+    border-bottom: 3px solid var(--normal-blue);
+}
+
+.tabcontent {
+    padding: 12px;
+    line-height: 21px;
+    display: none;
+}
+
+section#sunlight {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sunlight_content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.sunlight_content > .sunlight_content_transit {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 5px 30px;
+}
+@media screen and (max-width: 785px) {
+    .nav-menu {
+        width: 90%;
+    }
+    #main_cityname {
+        font-size: 2rem;
+    }
 }

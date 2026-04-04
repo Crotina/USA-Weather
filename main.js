@@ -2,10 +2,21 @@ import {
     url_param,
     get_content,
     get_current_location,
-    get_current_temperature
+    get_current_temperature,
+    convert_deg_dir,
+    convert_meter_to_ft_or_miles,
+    SaveCity,
+    to12Hour
  } from "./storage.js";
 
+ import convert from "https://esm.sh/convert-units";
+
 const LOCAL_STORAGE_KEY = 'weather_locations'; // do not fucking change this, if it changes, nobody can get the informations
+
+const current_city = {
+    name: null,
+    coordinate: null
+};
 
 /**
  * 
@@ -36,6 +47,7 @@ function urlparam_check() {
  * @param {number} longitude 
  */
 async function get_point(latitude, longitude) {
+    console.log('get-point', latitude, longitude)
     return await get_content(`https://api.weather.gov/points/${latitude},${longitude}`)
 }
 
@@ -84,45 +96,110 @@ function clear_saved_locations(){
 const c_to_f = (c) => {return (c*9/5+32).toFixed(0)}
 
 /**
- * 
+ * 加载内容到页面，传入的值必须是从美国官方天气预报api获取的第一步信息(point/lati..., longit...)
  * @param {object} content - the information that gets from weather.gov
  */
 async function load_display_content(content) {
-    const display_cityname = document.getElementById('display_cityname');
+    const display_cityname = document.getElementsByClassName('DISPLAY_current_cityname')
     const display_coordinates = document.getElementById('display_position');
-    const display_temperature = document.getElementById('display_temperature');
+    const display_temperature = document.getElementsByClassName('DISPYAY_temperature');
 
+    const display_visibility = document.getElementsByClassName('DISPLAY_visibility');
+    const display_wind_direction = document.getElementsByClassName('DISPLAY_wind_direction');
+    const display_wind_speed = document.getElementsByClassName('DISPLAY_wind_speed');
+
+    const hourly_forecast_list = document.getElementById('hourly_forecast_list');
+
+    console.debug(content)
     const urls = {
         forecast: content.properties.forecast,
         forecast_hourly: content.properties.forecastHourly,
         observation_station: content.properties.observationStations
     }
 
-    const temperature = await get_current_temperature(urls.observation_station);
+    const current_properties = await get_current_temperature(urls.observation_station);
     
+    console.log('current_properties: ', current_properties)
     const city_info = {
         coordinates: content.properties.relativeLocation.geometry.coordinates,
+
         name: content.properties.relativeLocation.properties.city,
         state: content.properties.relativeLocation.properties.state,
-        display_temperature: c_to_f(temperature.temperature.value),
+        display_temperature: `${c_to_f(current_properties.temperature.value)} °F`,
+
+        visibility: convert_meter_to_ft_or_miles(current_properties.visibility.value),
+        wind_direction: `${convert_deg_dir(current_properties.windDirection.value)}`,
+        wind_speed: `${convert(current_properties.windSpeed.value).from('km/h').to('m/h').toFixed(2)} mph`,
+
+        sunlight: {
+            transit_time: content.astronomicalData.transit,
+
+            normal_sunrise: content.astronomicalData.sunrise,
+            normal_sunset: content.astronomicalData.sunset,
+
+            civil_twilight_begin: content.astronomicalData.civilTwilightBegin,
+            civin_twilight_end: content.astronomicalData.civilTwilightEnd,
+
+            nautical_twilight_begin: content.astronomicalData.nauticalTwilightBegin,
+            nautical_twilight_end: content.astronomicalData.nauticalTwilightEnd,
+
+            astronomical_twilight_begin: content.astronomicalData.astronomicalTwilightBegin,
+            astronomical_twilight_end: content.astronomicalData.astronomicalTwilightEnd,
+        }
     }
+    console.log(city_info)
+    current_city.name = city_info.name;
+    current_city.coordinate = city_info.coordinates
 
-    const forcasts = await get_content(urls.forecast_hourly);
-    console.log(forcasts.properties.periods)
+    let forcasts = await get_content(urls.forecast_hourly);
+    forcasts = (forcasts.properties.periods).slice(0, 49)
 
-    display_cityname.textContent = `${city_info.name}, ${city_info.state}`;
+    put_content_to_page(display_cityname, `${city_info.name}, ${city_info.state}`)
     display_coordinates.textContent = `(${city_info.coordinates[1]}, ${city_info.coordinates[0]})`
-    display_temperature.textContent = city_info.display_temperature
+    put_content_to_page(display_temperature, city_info.display_temperature)
+
+    put_content_to_page(display_visibility, city_info.visibility);
+    put_content_to_page(display_wind_direction, city_info.wind_direction);
+    put_content_to_page(display_wind_speed, city_info.wind_speed);
+
+    let hrly_fo_content = '';
+    console.log(forcasts)
+    for(let i = 0; i < forcasts.length; i++) {
+        let f = forcasts[i];
+        let time = new Date(f.startTime);
+
+        hrly_fo_content += `
+            <div class="hourly_forecast_item">
+                    <img src="${f.icon}" alt="forecast_icon">
+                    <div class="hourly_forecast_item_detail">
+                        <span>${to12Hour(time.getHours())}</span>
+                        <br>
+                        <span><strong>${f.temperature} °F</strong></span>
+                    </div>
+                </div>
+        `
+    }
+    hourly_forecast_list.innerHTML = hrly_fo_content
 }
 
-
+/**
+ * 
+ * @param {HTMLElement} el 
+ * @param {any} content 
+ */
+function put_content_to_page(el, content) {
+    Array.from(el).forEach((el) => {
+        el.textContent = content;
+    })
+}
 
 async function init() {
     const is_urlparam_okay = urlparam_check();
     if (is_urlparam_okay) {
+        console.log('available url param detected')
         try {
-            await get_point(is_urlparam_okay.latitude, is_urlparam_okay.longitude);
-            // next is display content
+            const resu = await get_point(is_urlparam_okay.latitude, is_urlparam_okay.longitude);
+            load_display_content(resu)
         } catch(error) {
             console.log(error)
         }
@@ -132,9 +209,7 @@ async function init() {
     let is_current_location_able = false;
     let location = ''
     try{
-        console.time('get_location');
         location = await get_current_location();
-        console.timeEnd('get_location');
         is_current_location_able = true
     } catch(error) {
         console.error(error);
@@ -157,3 +232,4 @@ async function init() {
     }
 }
 window.init = init;
+// console.log(convert(16090).from('m').to('mi'))

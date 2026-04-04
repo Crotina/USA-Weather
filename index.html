@@ -10,18 +10,24 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <a href="#">Melokii</a>
+                <a href="#">Melokii weather app</a>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
                     <a href="#" class="nav-link active">Home</a>
                 </li>
                 <li class="nav-item location_list_container">
-                    <p class="nav-link">Saved Locations</p>
+                    <p class="nav-link">Current Location</p>
                     <ul id="location_list">
-                        <li class="location_list_item">Lorem, ipsum dolor.</li>
-                        <li class="location_list_item">Lorem ipsum dolor sit.</li>
+                        <li class="location_list_item">
+                            <span class="DISPLAY_current_cityname">--</span>
+                            <span class="DISPYAY_temperature">--</span>
+                        </li>
                     </ul>
+                </li>
+                <li class="nav-item location_list_container">
+                    <p class="nav-link">Saved City</p>
+                    <ul id="location_list"></ul>
                 </li>
                 <!-- <li class="nav-item">
                     <a href="temp.html" class="nav-link"></a>
@@ -35,14 +41,68 @@
         </div>
     </nav>
     <article id="main">
-        <section id="basic_info">
+        <!-- basic info like city name or current temperature -->
+        <section>
             <span>
-                <h1 id="display_cityname">lorem</h1>
-                <p id="display_position">Lorem ipsum dolor sit amet.</p>
+                <h1 class="DISPLAY_current_cityname" id="main_cityname">display_location</h1>
+                <p id="display_position">display_position</p>
             </span>
             <span>
-                <h1 id="display_temperature">99F</h1>
+                <h1 id="main_temperature" class="DISPYAY_temperature">--</h1>
             </span>
+        </section>
+        <!-- wind -->
+        <section id="wind_info">
+            <div class="wind_info_parts">
+                <span>Visibility</span>
+                <span class="DISPLAY_visibility">111</span>
+            </div>
+            <div class="wind_info_parts">
+                <span>Wind Direction</span>
+                <span class="DISPLAY_wind_direction">111</span>
+            </div>
+            <div class="wind_info_parts">
+                <span>Wind Speed</span>
+                <span class="DISPLAY_wind_speed">111</span>
+            </div>
+        </section>
+        <section id="sunlight">
+            <h2>Sunlight</h2>
+            <div class="sunlight_content">
+                <div class="sunlight_content_transit">
+                    <span>transit</span>
+                    <span id="display_transit">444:4444</span>
+                </div>
+                <div class="tab">
+                    <button class="tablink" data-tab="tab1">sunrise / sunset</button>
+                    <button class="tablink" data-tab="tab2">Civil Twilight</button>
+                    <button class="tablink" data-tab="tab3">Nautical Twilight</button>
+                    <button class="tablink" data-tab="tab4">Astronomical Twilight</button>
+
+                    <div id="tab1" class="tabcontent normal_sunligh">
+                        <p>sunrise: 444444</p>
+                        <p>sunset: 444444</p>
+                    </div>
+                    <div id="tab2" class="tabcontent civil_twilight">
+                        aaa
+                    </div>
+                    <div id="tab3" class="tabcontent nautical_twilight">内容 3</div>
+                    <div id="tab4" class="tabcontent astronomical_twilight">内容 4</div>
+                </div>
+            </div>
+        </section>
+        <section id="hourly_forecast">
+            <h2>Hourly Forcast</h2>
+            <div id="hourly_forecast_list">
+                <div class="hourly_forecast_item">
+                    <img src="https://api.weather.gov/icons/land/night/rain_showers,20?size=small" alt="forecast_icon">
+                    <div class="hourly_forecast_item_detail">
+                        <span>2026-04-03T20:00:00-04:00</span>
+                        <br>
+                        <span><strong>76 °F</strong></span>
+                    </div>
+                </div>
+            </div>
         </section>
     </article>
 

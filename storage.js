@@ -25,6 +25,18 @@ export class Notice{
     }
 }
 
+export class SaveCity{
+    /**
+     * 
+     * @param {[latitude: number, longitude: number]} coordinate - 城市的坐标，使用数组按照latitude, longitude顺序传入
+     * @param {string} name - 城市的显示名称
+     */
+    constructor(coordinate, name) {
+        this.name = name,
+        this.coordinate = coordinate
+    }
+}
+
 /**
  * 
  * @returns location that include x and y axis
@@ -82,4 +94,66 @@ export async function get_current_temperature(observation_stations_url = null) {
     console.log(current_temp_url.properties)
     return current_temp_url.properties
    
+}
+
+/**
+ * 
+ * @param {number} deg - degree
+ * @returns {string} - direction
+ */
+export function convert_deg_dir(deg) {
+  if (deg == null || isNaN(deg)) return "";
+
+  deg = (deg % 360 + 360) % 360;
+
+  const directions = [
+    "N",// 0°
+    "NNE",// 22.5°
+    "NE",// 45°
+    "ENE",// 67.5°
+    "E",// 90°
+    "ESE",// 112.5°
+    "SE",// 135°
+    "SSE",// 157.5°
+    "S",// 180°
+    "SSW",// 202.5°
+    "SW",// 225°
+    "WSW",// 247.5°
+    "W",// 270°
+    "WNW",// 292.5°
+    "NW",// 315°
+    "NNW"// 337.5°
+  ];
+
+  const index = Math.round(deg / 22.5) % 16;
+  return directions[index];
+}
+
+/**
+ * 
+ * @param {number} meter - meter
+ * @returns {string} a length with unit
+ */
+export function convert_meter_to_ft_or_miles(meters){
+    if (meters == null || isNaN(meters)) return null;
+    
+    if((meters * 3.28084) > 1319) {
+        let a = ((meters * 3.28084) / 5280).toFixed(2);
+        if (a >= 10.00){
+             return 'Unlimited'
+        }
+        return `${a} miles`
+    } else {
+        return `${(meters * 3.28084).toFixed(2)} ft`
+    }
+}
+
+/**
+ * 
+ * @param {number} hr_24 - a time in 24 hr
+ */
+export function to12Hour(hour24) {
+  const period = hour24 >= 12 ? "PM" : "AM";
+  const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
+  return `${hour12} ${period}`;
 }
