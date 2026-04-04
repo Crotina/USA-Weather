@@ -17,9 +17,11 @@
                 <li class="nav-item">
                     <a href="#" class="nav-link active">Melokii Weather App</a>
                 </li>
+                <li class="nav-item"><p onclick="init()">Force Reload</p></li>
+                <li class="nav-item"><p onclick="add_current_city_to_saved_city()">add current city to saved city</p></li>
                 <li class="nav-item location_list_container">
                     <p class="nav-link">Current Location</p>
-                    <ul id="location_list">
+                    <ul class="location_list">
                         <li class="location_list_item">
                             <span class="DISPLAY_current_cityname">--</span>
                             <span class="DISPYAY_temperature">--</span>
@@ -28,7 +30,7 @@
                 </li>
                 <li class="nav-item location_list_container">
                     <p class="nav-link">Saved City</p>
-                    <ul id="location_list"></ul>
+                    <ul id="location_list" class="location_list"></ul>
                 </li>
                 <!-- <li class="nav-item">
                     <a href="temp.html" class="nav-link"></a>
@@ -97,3 +99,9 @@
     <script src="content_layout.js"></script>
 </body>
 </html>
+<template>
+                           <li class="location_list_item">
+                            <a href="index.html?latitude={latitude}&longitude={longitude}">${b.name}</a>
+                            <button class="delete_saved_city_btn" >delete</button>
+                        </li>
+</template>

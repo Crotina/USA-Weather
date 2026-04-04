@@ -5,18 +5,19 @@ import {
     get_current_temperature,
     convert_deg_dir,
     convert_meter_to_ft_or_miles,
-    SaveCity,
-    to12Hour
+    to12Hour,
+    c_to_f,
+    Storage
  } from "./storage.js";
 
  import convert from "https://esm.sh/convert-units";
-
-const LOCAL_STORAGE_KEY = 'weather_locations'; // do not fucking change this, if it changes, nobody can get the informations
 
 const current_city = {
     name: null,
     coordinate: null
 };
+
+const localst = new Storage();
 
 /**
  * 
@@ -75,25 +76,7 @@ function timestamp_convert(timestamp) {
     return new Date(timestamp).toDateString()
 }
 
-/**
- * 
- * @returns {object}
- */
-function get_local_setting() {
-    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (data != null) {
-        return JSON.parse(data)
-    } else {
-        localStorage.setItem(LOCAL_STORAGE_KEY, '{}');
-        return {}
-    }
-    
-}
-function clear_saved_locations(){
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
-}
 
-const c_to_f = (c) => {return (c*9/5+32).toFixed(0)}
 
 /**
  * 加载内容到页面，传入的值必须是从美国官方天气预报api获取的第一步信息(point/lati..., longit...)
@@ -115,6 +98,8 @@ async function load_display_content(content) {
     const transit_ds = document.getElementById('display_transit');
 
     const hourly_forecast_list = document.getElementById('hourly_forecast_list');
+
+    
 
     console.debug(content)
     const urls = {
@@ -203,10 +188,43 @@ async function load_display_content(content) {
                 </div>
         `
     }
-    hourly_forecast_list.innerHTML = hrly_fo_content
+    hourly_forecast_list.innerHTML = hrly_fo_content;
 
-    console.log('Done')
+    load_saved_city_list();
 }
+
+function load_saved_city_list() {
+    const saved_city_el = document.getElementById('location_list');
+    const saved_city = localst.get_local_setting();
+
+    let svct = '';
+    console.log(saved_city.cities)
+    for(let a = 0; a < saved_city.cities.length; a++) {
+        const b = saved_city.cities[a];
+        svct += `
+            <li class="location_list_item">
+                            <a href="index.html?latitude=${b.coordinate[1]}&longitude=${b.coordinate[0]}">${b.name}</a>
+                            <button class="delete_saved_city_btn" onclick="delete_city_from_list(${a})">delete</button>
+                        </li>
+        `
+    }
+    saved_city_el.innerHTML = svct;
+}
+function delete_city_from_list(idx) {
+    localst.delete_city(idx);
+    load_saved_city_list();
+}
+
+function add_current_city_to_saved_city(){
+    localst.add_city({
+        name: current_city.name,
+        coordinate: [current_city.coordinate[0], current_city.coordinate[1]]
+    });
+    load_saved_city_list();
+}
+window.add_current_city_to_saved_city = add_current_city_to_saved_city;
+window.load_saved_city_list = load_saved_city_list;
+window.delete_city_from_list = delete_city_from_list;
 
 /**
  * 
@@ -263,4 +281,6 @@ async function init() {
     }
 }
 window.init = init;
+window.localst = localst;
+window.current_city = current_city;
 // console.log(convert(16090).from('m').to('mi'))

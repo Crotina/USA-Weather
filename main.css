@@ -124,13 +124,34 @@ a.nav-link.active {
     content: 'No Saved City';
     color: var(--secondary-gray);
 }
-#location_list .location_list_item {
-    border: 1px solid #000;
+.location_list .location_list_item {
+    /* border: 1px solid #000; */
+    border-bottom: 3px solid var(--normal-blue);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     margin: 5px 0;
-    padding: 4px;
+    padding: 7px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+.location_list .location_list_item > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.delete_saved_city_btn {
+    background-color: var(--normal-blue);
+    color: var(--regular-white);
+    padding: 5px;
+    border-radius: 0px;
+    border: 2px solid transparent;
+    outline: none;
+    cursor: pointer;
+}
+.delete_saved_city_btn:hover {
+    background-color: var(--regular-white);
+    color: var(--normal-blue);
+    border: 2px solid var(--normal-blue);
 }
 
 article#main {

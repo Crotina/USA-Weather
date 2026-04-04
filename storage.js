@@ -24,19 +24,6 @@ export class Notice{
         }, time_ms);
     }
 }
-
-export class SaveCity{
-    /**
-     * 
-     * @param {[latitude: number, longitude: number]} coordinate - 城市的坐标，使用数组按照latitude, longitude顺序传入
-     * @param {string} name - 城市的显示名称
-     */
-    constructor(coordinate, name) {
-        this.name = name,
-        this.coordinate = coordinate
-    }
-}
-
 /**
  * 
  * @returns location that include x and y axis
@@ -157,3 +144,64 @@ export function to12Hour(hour24) {
   const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
   return `${hour12} ${period}`;
 }
+
+export class Storage{
+    constructor(){
+        this.LOCAL_STORAGE_KEY = 'SAVEDCITY'
+    }
+
+    _cover_storage(obj) {
+        localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(obj));
+    }
+
+    _reset_storage(){
+        localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify({
+                    cities: []
+                }))
+    }
+
+    get_local_setting() {
+        const data = localStorage.getItem(this.LOCAL_STORAGE_KEY);
+        if (data != null) {
+            let jsondata = JSON.parse(data);
+            return jsondata
+        } else {
+            this._reset_storage();
+            return this.get_local_setting();
+        }
+    }
+
+    clear_saved_locations(){
+        localStorage.removeItem(this.LOCAL_STORAGE_KEY);
+    }
+    
+    /**
+     * 
+     * @param {{name: string, coordinate: [latitude: number, longitude: number]}} cityobj 
+     * @returns 
+     */
+    add_city(cityobj) {
+        if(typeof(cityobj.name) != 'string' || !Array.isArray(cityobj.coordinate)){
+            console.error(cityobj, 'error value', )
+            return
+        }
+        if (!cityobj.coordinate[0] || !cityobj.coordinate[1]){
+            console.error(cityobj, 'error in coordinate');
+            return
+        }
+
+        const data = this.get_local_setting();
+        data.cities.push(cityobj);
+        this._cover_storage(data);
+    }
+    delete_city(idx) {
+        idx = parseInt(idx);
+        if(isNaN(idx)) {return}
+        const data = this.get_local_setting();
+        if(data.cities.length == 0) return
+        data.cities.splice(idx, 1);
+        console.log(data)
+        this._cover_storage(data)
+    }
+}
+export const c_to_f = (c) => {return (c*9/5+32).toFixed(0)}
