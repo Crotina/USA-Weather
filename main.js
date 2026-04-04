@@ -7,7 +7,8 @@ import {
     convert_meter_to_ft_or_miles,
     to12Hour,
     c_to_f,
-    Storage
+    Storage,
+    DateNoTimeZone
  } from "./storage.js";
 
  import convert from "https://esm.sh/convert-units";
@@ -98,10 +99,11 @@ async function load_display_content(content) {
     const transit_ds = document.getElementById('display_transit');
 
     const hourly_forecast_list = document.getElementById('hourly_forecast_list');
+    const daily_forecast_list = document.getElementById('daily_forecast_list');
 
     
 
-    console.debug(content)
+    console.log('content: ', content)
     const urls = {
         forecast: content.properties.forecast,
         forecast_hourly: content.properties.forecastHourly,
@@ -116,26 +118,26 @@ async function load_display_content(content) {
 
         name: content.properties.relativeLocation.properties.city,
         state: content.properties.relativeLocation.properties.state,
-        display_temperature: `${c_to_f(current_properties.temperature.value)} °F`,
+        display_temperature: `${c_to_f(current_properties.temperature.value)}°F`,
 
         visibility: convert_meter_to_ft_or_miles(current_properties.visibility.value),
         wind_direction: `${convert_deg_dir(current_properties.windDirection.value)}`,
-        wind_speed: `${convert(current_properties.windSpeed.value).from('km/h').to('m/h').toFixed(2)} mph`,
+        wind_speed: conver_kmh_mph(current_properties.windSpeed.value),
 
         sunlight: {
-            transit_time: new Date(content.properties.astronomicalData.transit),
+            transit_time: new DateNoTimeZone(content.properties.astronomicalData.transit),
 
-            normal_sunrise: new Date(content.properties.astronomicalData.sunrise),
-            normal_sunset: new Date(content.properties.astronomicalData.sunset),
+            normal_sunrise: new DateNoTimeZone(content.properties.astronomicalData.sunrise),
+            normal_sunset: new DateNoTimeZone(content.properties.astronomicalData.sunset),
 
-            civil_twilight_begin: new Date(content.properties.astronomicalData.civilTwilightBegin),
-            civil_twilight_end: new Date(content.properties.astronomicalData.civilTwilightEnd),
+            civil_twilight_begin: new DateNoTimeZone(content.properties.astronomicalData.civilTwilightBegin),
+            civil_twilight_end: new DateNoTimeZone(content.properties.astronomicalData.civilTwilightEnd),
 
-            nautical_twilight_begin: new Date(content.properties.astronomicalData.nauticalTwilightBegin),
-            nautical_twilight_end: new Date(content.properties.astronomicalData.nauticalTwilightEnd),
+            nautical_twilight_begin: new DateNoTimeZone(content.properties.astronomicalData.nauticalTwilightBegin),
+            nautical_twilight_end: new DateNoTimeZone(content.properties.astronomicalData.nauticalTwilightEnd),
 
-            astronomical_twilight_begin: new Date(content.properties.astronomicalData.astronomicalTwilightBegin),
-            astronomical_twilight_end: new Date(content.properties.astronomicalData.astronomicalTwilightEnd),
+            astronomical_twilight_begin: new DateNoTimeZone(content.properties.astronomicalData.astronomicalTwilightBegin),
+            astronomical_twilight_end: new DateNoTimeZone(content.properties.astronomicalData.astronomicalTwilightEnd),
         }
     }
     const sl = city_info.sunlight;
@@ -145,7 +147,10 @@ async function load_display_content(content) {
     current_city.coordinate = city_info.coordinates
 
     let forcasts = await get_content(urls.forecast_hourly);
-    forcasts = (forcasts.properties.periods).slice(0, 49)
+    forcasts = (forcasts.properties.periods).slice(1, 50);
+
+    let daily_forecasts = await get_content(urls.forecast);
+    console.log('daily_forecast: ', daily_forecasts);
 
     put_content_to_page(display_cityname, `${city_info.name}, ${city_info.state}`)
     display_coordinates.textContent = `(${city_info.coordinates[1]}, ${city_info.coordinates[0]})`
@@ -156,41 +161,108 @@ async function load_display_content(content) {
     put_content_to_page(display_wind_speed, city_info.wind_speed);
 
     put_content_to_page(sunlight_normal, `
-        <p>sunrise: ${sl.normal_sunrise.toLocaleTimeString()}</p>
-        <p>sunset: ${sl.normal_sunset.toLocaleTimeString()}</p>`, true);
+        <p>sunrise: ${sl.normal_sunrise.toTimeString()}</p>
+        <p>sunset: ${sl.normal_sunset.toTimeString()}</p>`, true);
     put_content_to_page(sunlight_civil_twilight, `
-            <p>Twilight Begin: ${sl.civil_twilight_begin.toLocaleTimeString()}</p>
-            <p>Twilight End: ${sl.civil_twilight_end.toLocaleTimeString()}</p>
+            <p>Twilight Begin: ${sl.civil_twilight_begin.toTimeString()}</p>
+            <p>Twilight End: ${sl.civil_twilight_end.toTimeString()}</p>
         `, true);
     put_content_to_page(sunlight_nautical_twilight, `
-        <p>Twilight Begin: ${sl.nautical_twilight_begin.toLocaleTimeString()}</p>
-        <p>Twilight End: ${sl.nautical_twilight_end.toLocaleTimeString()}</p>
+        <p>Twilight Begin: ${sl.nautical_twilight_begin.toTimeString()}</p>
+        <p>Twilight End: ${sl.nautical_twilight_end.toTimeString()}</p>
         `, true);
     put_content_to_page(sunlight_astronomical_twilight, `
-        <p>Twilight Begin: ${sl.astronomical_twilight_begin.toLocaleTimeString()}</p>
-        <p>Twilight End: ${sl.astronomical_twilight_end.toLocaleTimeString()}</p>
+        <p>Twilight Begin: ${sl.astronomical_twilight_begin.toTimeString()}</p>
+        <p>Twilight End: ${sl.astronomical_twilight_end.toTimeString()}</p>
         `, true)
-    transit_ds.textContent = sl.transit_time.toLocaleTimeString();
+    transit_ds.textContent = sl.transit_time.toTimeString();
 
     let hrly_fo_content = '';
     for(let i = 0; i < forcasts.length; i++) {
         let f = forcasts[i];
-        let time = new Date(f.startTime);
-
+        let time = new DateNoTimeZone(f.startTime);
         hrly_fo_content += `
             <div class="hourly_forecast_item">
                     <img src="${f.icon}" alt="forecast_icon">
                     <div class="hourly_forecast_item_detail">
                         <span>${to12Hour(time.getHours())}</span>
                         <br>
-                        <span><strong>${f.temperature} °F</strong></span>
+                        <span><strong>${f.temperature}°F</strong></span>
                     </div>
                 </div>
         `
     }
     hourly_forecast_list.innerHTML = hrly_fo_content;
 
+    let dly_fo = '';
+    for(let r = 0; r < daily_forecasts.properties.periods.length; r++) {
+        let c = daily_forecasts.properties.periods[r];
+        const time = new DateNoTimeZone(c.startTime);
+
+        dly_fo += `
+        <div class="forecast_card">
+            <div class="card_main">
+                <div class="weather_summary">
+                    <img src="${c.icon}" alt="weather" class="weather_icon">
+                    <div class="weather_info">
+                        <span class="date_label">${time.toDateString()}</span>
+                        <h3 class="name">${c.name}</h3>
+                        <p class="short_forecast">${c.shortForecast}</p>
+                    </div>
+                </div>
+                <div class="temperature">${c.temperature}°F</div>
+                <button class="expand_btn" aria-label="Toggle details">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="card_details">
+                <div class="details_inner">
+                    <hr>
+                    <p class="detailed_forecast">${c.detailedForecast}</p>
+                    <div class="extra_stats">
+                        <span><strong>Wind</strong> ${c.windDirection} ${c.windSpeed}</span>
+                        <span><strong>Rain</strong> ${c.probabilityOfPrecipitation.value}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `
+    }
+    daily_forecast_list.innerHTML = dly_fo;
+    active_forecast_card();
+
     load_saved_city_list();
+}
+
+function conver_kmh_mph(kmh) {
+    if(kmh === null || isNaN(kmh)) {
+        return "unavailable"
+    }
+    return `${convert(kmh).from('km/h').to('m/h').toFixed(2)} mph`
+}
+
+function active_forecast_card(){
+    const cards = document.getElementsByClassName('forecast_card');
+
+    Array.from(cards).forEach(card => {
+        const btn = card.querySelector('.expand_btn');
+        
+        btn.addEventListener('click', () => {
+            // 切换当前卡片的展开类名
+            const isExpanded = card.classList.toggle('is-expanded');
+            
+            //无障碍属性更新
+            btn.setAttribute('aria-expanded', isExpanded);
+
+            //手风琴
+            // cards.forEach(otherCard => {
+            //     if (otherCard !== card) otherCard.classList.remove('is-expanded');
+            // });
+        });
+    });
 }
 
 function load_saved_city_list() {
@@ -249,6 +321,7 @@ async function init() {
         try {
             const resu = await get_point(is_urlparam_okay.latitude, is_urlparam_okay.longitude);
             load_display_content(resu)
+            document.getElementById('notice_when_use_paramurl').style.display = 'flex'
         } catch(error) {
             console.log(error)
         }
@@ -262,7 +335,7 @@ async function init() {
         is_current_location_able = true
     } catch(error) {
         console.error(error);
-        notice('we cant get your location')
+        notice('we cant get your location', error.message)
     }
     if(is_current_location_able) {
         const location_latitude = location.coords.latitude.toFixed(4);

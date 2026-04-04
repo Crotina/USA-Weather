@@ -1,9 +1,20 @@
 :root {
     --light-blue: #b5ccff;
     --normal-blue: #39538b;
-
+    --text-color: #000000;
     --regular-white: #fff9f6;
+    --pure-white: #fff;
     --secondary-gray: #595959;
+    --SPECIAL-BTN-TEXT: #fff;
+}
+.dark-mode {
+    --light-blue: #274385;
+    --normal-blue: #1a2746;
+    --text-color: #fff;
+    --regular-white: #1a1a1a;
+    --pure-white: #312c5e;
+    --secondary-gray: #bfbfbf;
+    --SPECIAL-BTN-TEXT: #fff;
 }
 *{
     padding: 0px;
@@ -18,7 +29,12 @@ html {
 body {
     height: 100vh;
     background: transparent;
+    overflow:auto;
     /* background-position: fixed; */
+}
+
+.color-mode-change {
+    color: #b5ccff;
 }
 
 .navbar {
@@ -27,7 +43,9 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    min-width: 100vw;
+    width: 100%;
+    box-sizing: border-box;
+    height: 10vh;
 }
 
 .nav-container {
@@ -59,7 +77,9 @@ body {
 .nav-menu {
     position: fixed;
     right: -100%;
-    top: 70px;
+    top: 10vh;
+    height: 70vh;
+    display: flex;
     flex-direction: column;
     background-color: var(--regular-white);
     width: 25%;
@@ -67,6 +87,9 @@ body {
     transition: 0.3s;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     padding: 1rem;
+    /* padding-top: 80px; */
+    overflow: auto;
+    list-style: none;
 }
 .nav-menu.active {
     right: 0;
@@ -85,6 +108,7 @@ body {
     font-size: 1.5rem;
     transition: color 0.3s;
     cursor: pointer;
+    color: var(--text-color);
 }
 
 a.nav-link:hover,
@@ -109,12 +133,16 @@ a.nav-link.active {
 
 #main_temperature {
     font-size: 3rem;
+    color: var(--text-color);
 }
 #main_cityname {
     font-size: 3rem;
+    color: var(--text-color);
 }
 
-
+#display_position {
+    color: var(--text-color);
+}
 
 .location_list_container {
     display: flex;
@@ -125,7 +153,7 @@ a.nav-link.active {
     color: var(--secondary-gray);
 }
 .location_list .location_list_item {
-    /* border: 1px solid #000; */
+    /* border: 1px solid var(--text-color); */
     border-bottom: 3px solid var(--normal-blue);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     margin: 5px 0;
@@ -133,25 +161,49 @@ a.nav-link.active {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    color: var(--text-color);
 }
 .location_list .location_list_item > a {
     text-decoration: none;
     color: inherit;
 }
+.location_list .location_list_item > a:hover {
+    text-decoration: underline;
+    color: var(--normal-blue);
+}
 
 .delete_saved_city_btn {
     background-color: var(--normal-blue);
-    color: var(--regular-white);
+    color: var(--SPECIAL-BTN-TEXT);
     padding: 5px;
     border-radius: 0px;
     border: 2px solid transparent;
     outline: none;
     cursor: pointer;
+    transition: all 0.3s;
 }
-.delete_saved_city_btn:hover {
-    background-color: var(--regular-white);
-    color: var(--normal-blue);
-    border: 2px solid var(--normal-blue);
+.DISPLAY_current_cityname {
+    color: var(--text-color);
+}
+
+.DISPYAY_temperature {
+    color: var(--text-color);
+}
+
+.DISPLAY_visibility {
+    color: var(--text-color);
+}
+
+.DISPLAY_wind_direction {
+    color: var(--text-color);
+}
+
+.DISPLAY_wind_speed {
+    color: var(--text-color);
+}
+
+#display_transit {
+    color: var(--text-color);
 }
 
 article#main {
@@ -182,6 +234,7 @@ section#wind_info > .wind_info_parts {
     flex-direction: column;
     align-items: center;
     margin: 10px;
+    color: var(--text-color);
 }
 section#hourly_forecast {
     flex-direction: column;
@@ -200,10 +253,12 @@ section#hourly_forecast {
 }
 #hourly_forecast_list > .hourly_forecast_item {
     border-radius: 10px;
-    border: 1px solid #000;
+    /* border: 1px solid var(--text-color); */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     min-width: 5rem;
     max-width: 5rem;
-    margin: 0 5px;
+    margin: 5px;
+    background-color: var(--pure-white);
 }
 #hourly_forecast_list > .hourly_forecast_item img {
     border-radius: 10px 10px 0px 0px;
@@ -211,6 +266,7 @@ section#hourly_forecast {
 }
 #hourly_forecast_list > .hourly_forecast_item .hourly_forecast_item_detail {
     text-align: center;
+    color: var(--text-color);
 }
 
 .tab {
@@ -227,7 +283,7 @@ section#hourly_forecast {
     padding: 10px 15px;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s;
+    color: var(--text-color);
 }
 
 /* .tab button:hover {
@@ -242,6 +298,7 @@ section#hourly_forecast {
     padding: 12px;
     line-height: 21px;
     display: none;
+    color: var(--text-color);
 }
 
 section#sunlight {
@@ -261,7 +318,200 @@ section#sunlight {
     flex-direction: column;
     text-align: center;
     margin: 5px 30px;
+    color: var(--text-color);
 }
+
+.normal_sunlight {
+    color: var(--text-color);
+}
+
+.civil_twilight {
+    color: var(--text-color);
+}
+
+.nautical_twilight {
+    color: var(--text-color);
+}
+
+.astronomical_twilight {
+    color: var(--text-color);
+}
+
+section#daily_forecast {
+    flex-direction: column;
+    align-items: flex-start;
+}
+#daily_forecast > #daily_forecast_list {
+    width: 100%;
+}
+#daily_forecast_list:empty::after{
+    content: 'No Forecasts';
+    color: var(--secondary-gray);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-color);
+}
+
+p {
+    color: var(--text-color);
+}
+
+span {
+    color: var(--text-color);
+}
+
+.forecast_card {
+    background: var(--pure-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin: 16px auto;
+    /* max-width: 450px; */
+    overflow: hidden;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.forecast_card > .card_main {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    gap: 12px;
+}
+
+.forecast_card > .card_main > .weather_summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    flex: 1;
+}
+
+.forecast_card > .card_main > .weather_summary > .weather_icon {
+    width: 5rem;
+    height: auto;
+    border-radius: 7px;
+    object-fit: cover;
+}
+
+.forecast_card > .card_main > .weather_summary > .weather_info > .name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.forecast_card > .card_main > .weather_summary > .weather_info > .short_forecast {
+    margin: 2px 0 0;
+    font-size: 0.85rem;
+    color: var(--secondary-gray);
+}
+
+/* 温度 */
+.forecast_card > .card_main > .temperature {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--normal-blue);
+    padding: 0 8px;
+}
+
+/* 展开按钮 */
+.forecast_card > .card_main > .expand_btn {
+    background: #f2f2f7;
+    border: none;
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.2s ease;
+}
+
+.forecast_card > .card_main > .expand_btn:hover {
+    background: #e5e5ea;
+}
+
+.forecast_card > .card_main > .expand_btn > svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--secondary-gray);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 展开状态下的 SVG 旋转 */
+.forecast_card.is-expanded > .card_main > .expand_btn > svg {
+    transform: rotate(180deg);
+}
+
+/* 详细信息容器 - 使用 Grid 实现平滑动画 */
+.forecast_card > .card_details {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+}
+
+.forecast_card.is-expanded > .card_details {
+    grid-template-rows: 1fr;
+}
+
+/* 详细信息内部容器 */
+.card_details > .details_inner {
+    overflow: hidden;
+    padding: 0 16px;
+}
+
+.forecast_card.is-expanded > .card_details > .details_inner {
+    padding-bottom: 16px;
+}
+
+.forecast_card > .card_details > .details_inner > hr {
+    border: 0;
+    border-top: 1px solid var(--secondary-gray);
+    margin: 0 0 12px 0;
+}
+
+.forecast_card > .card_details > .details_inner > .detailed_forecast {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.forecast_card > .card_details > .details_inner > .extra_stats {
+    margin-top: 12px;
+    display: flex;
+    gap: 16px;
+    font-size: 0.8rem;
+    color: var(--secondary-gray);
+}
+
+.forecast_card > .card_main > .weather_summary > .weather_info {
+    display: flex;
+    flex-direction: column;
+}
+
+.forecast_card > .card_main > .weather_summary > .weather_info > .date_label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--normal-blue);
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+    opacity: 0.8;
+}
+
+.forecast_card > .card_main > .weather_summary > .weather_info > .name {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    color: var(--text-color);
+}
+
+section#notice_when_use_paramurl {
+    display: none;
+}
+
 @media screen and (max-width: 785px) {
     .nav-menu {
         width: 90%;
@@ -269,4 +519,5 @@ section#sunlight {
     #main_cityname {
         font-size: 2rem;
     }
+
 }

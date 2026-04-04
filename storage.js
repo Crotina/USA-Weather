@@ -78,7 +78,6 @@ export async function get_current_temperature(observation_stations_url = null) {
     console.log(observation_list.observationStations[0])
 
     const current_temp_url = await get_content(`${observation_list.observationStations[0]}/observations/latest`);
-    console.log(current_temp_url.properties)
     return current_temp_url.properties
    
 }
@@ -89,7 +88,7 @@ export async function get_current_temperature(observation_stations_url = null) {
  * @returns {string} - direction
  */
 export function convert_deg_dir(deg) {
-  if (deg == null || isNaN(deg)) return "";
+  if (deg == null || isNaN(deg)) return "unavailable";
 
   deg = (deg % 360 + 360) % 360;
 
@@ -122,13 +121,10 @@ export function convert_deg_dir(deg) {
  * @returns {string} a length with unit
  */
 export function convert_meter_to_ft_or_miles(meters){
-    if (meters == null || isNaN(meters)) return null;
+    if (meters == null || isNaN(meters)) return "unavailable";
     
     if((meters * 3.28084) > 1319) {
         let a = ((meters * 3.28084) / 5280).toFixed(2);
-        if (a >= 10.00){
-             return 'Unlimited'
-        }
         return `${a} miles`
     } else {
         return `${(meters * 3.28084).toFixed(2)} ft`
@@ -156,7 +152,8 @@ export class Storage{
 
     _reset_storage(){
         localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify({
-                    cities: []
+                    cities: [],
+                    color_mode: 'light'
                 }))
     }
 
@@ -204,4 +201,58 @@ export class Storage{
         this._cover_storage(data)
     }
 }
+
 export const c_to_f = (c) => {return (c*9/5+32).toFixed(0)}
+
+export class DateNoTimeZone {
+    constructor(dateString) {
+        // 只取前面的时间部分，不管时区
+        const match = dateString.match(
+            /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/
+        );
+
+        if (!match) {
+            throw new Error("Invalid date format");
+        }
+
+        const [
+            _,
+            year, month, day,
+            hour, minute, second
+        ] = match;
+
+        this.year = parseInt(year);
+        this.month = parseInt(month) - 1;
+        this.day = parseInt(day);
+        this.hour = parseInt(hour);
+        this.minute = parseInt(minute);
+        this.second = parseInt(second);
+    }
+
+    /**
+     * 
+     * @param {number} hour24 
+     * @returns {[number, string]}
+     */
+    _hour24To12(hour24) {
+        const period = hour24 >= 12 ? "PM" : "AM";
+        const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
+
+        const pad = n => n.toString().padStart(2, "0");
+
+        return [pad(hour12), period];
+    }
+    _pad(n){ return n.toString().padStart(2, "0") }
+
+    getFullYear() { return this.year; }
+    getMonth() { return this.month; }
+    getDate() { return this.day; }
+    getHours() { return this.hour; }
+    getMinutes() { return this.minute; }
+    getSeconds() { return this.second; }
+    toTimeString() {
+        const converted_hr = this._hour24To12(this.hour);
+        return `${converted_hr[0]}:${this._pad(this.minute)} ${converted_hr[1]}`
+    }
+    toDateString(){ return `${this.month + 1} / ${this.day}` }
+}

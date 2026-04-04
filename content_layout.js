@@ -1,3 +1,5 @@
+import { Storage } from "./storage.js";
+
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
@@ -5,12 +7,10 @@ hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
 });
-
-// 关闭移动端菜单当点击菜单项时
-document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navMenu.classList.remove('active');
-}));
+// document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+//     hamburger.classList.remove('active');
+//     navMenu.classList.remove('active');
+// }));
 
 
 const tabContainers = document.querySelectorAll('.tab');
@@ -40,3 +40,25 @@ tabContainers.forEach(container => {
         tabButtons[0].click();
     }
 });
+
+// const storage = new Storage();
+// const toggleBtn = document.getElementById("toggle_theme");
+// const body = document.body;
+
+// // 初始化：读取用户上次选择
+// const settings = storage.get_local_setting();
+// if (settings.color_mode === "dark") {
+//     body.classList.add("dark-mode");
+// }
+
+// toggleBtn.addEventListener("click", () => {
+//     const data = storage.get_local_setting();
+
+//     // 切换 DOM class
+//     const newMode = data.color_mode === "dark" ? "light" : "dark";
+//     body.classList.toggle("dark-mode", newMode === "dark");
+
+//     // 保存到 storage
+//     data.color_mode = newMode;
+//     storage._cover_storage(data);
+// });

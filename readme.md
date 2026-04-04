@@ -6,6 +6,6 @@ This app uses the United States government's weather API, it donsn't work for lo
 
 **for api info: [National Weather Service](https://www.weather.gov/documentation/services-web-api)**
 
-此程序目前尚未完成，您仍然需要在控制台手动执行 `init()` 来完成初始化
+此程序目前尚未完成，您仍然需要在控制台手动执行 `init()` 来完成初始化，不过，你也可以在小菜单的按钮上点击进行初始化
 
-this app is not done yet, you need to run command `init()` in console for inititalization
+this app is not done yet, you need to run command `init()` in console for inititalization, you can also click the 手动初始化(init manually) button in menu for inititalization
