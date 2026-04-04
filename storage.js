@@ -1,27 +1,50 @@
 export const url_param = new URLSearchParams(window.location.search);
 
-export class Notice{
+export class Notice {
+
     /**
      * 
-     * @param {HTMLElement} element 
+     * @param {HTMLElement} el 
      */
-    constructor (element) {
-        this.element = element,
-        this.display_value = 'flex'
+    constructor(el) {
+        this.el = el;
+        this.el_text = el.querySelector('.info__title');
     }
-    _open(c){
-        this.element.textContent = c;
-        this.element.classList.add('show')
+    _open(text) {
+        this.el_text.textContent = text;
+        this.el.classList.add('show');
     }
-    _close() {
-        this.element.classList.remove('show')
+    _close(class_added) {
+        this.el.classList.remove(class_added);
+        this.el.classList.remove('show');
     }
-    show(content, time_ms) {
-        this._open(content)
-
+    output_log(text, time = 2000) {
+        this.el.classList.add('log');
+        this._open(text);
         setTimeout(() => {
-            this._close()
-        }, time_ms);
+            this._close('log');
+        }, time);
+    }
+    output_warn(text, time = 2000) {
+        this.el.classList.add('warn');
+        this._open(text);
+        setTimeout(() => {
+            this._close('warn');
+        }, time);
+    }
+    output_error(text, time = 2000) {
+        this.el.classList.add('error');
+        this._open(text);
+        setTimeout(() => {
+            this._close('error');
+        }, time);
+    }
+    output_debug(text, time = 2000) {
+        this.el.classList.add('debug');
+        this._open(text);
+        setTimeout(() => {
+            this._close('debug');
+        }, time);
     }
 }
 /**

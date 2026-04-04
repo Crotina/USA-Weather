@@ -8,7 +8,8 @@ import {
     to12Hour,
     c_to_f,
     Storage,
-    DateNoTimeZone
+    DateNoTimeZone,
+    Notice
  } from "./storage.js";
 
  import convert from "https://esm.sh/convert-units";
@@ -19,6 +20,7 @@ const current_city = {
 };
 
 const localst = new Storage();
+const notice = new Notice(document.getElementById('notice_info'));
 
 /**
  * 
@@ -51,16 +53,6 @@ function urlparam_check() {
 async function get_point(latitude, longitude) {
     console.log('get-point', latitude, longitude)
     return await get_content(`https://api.weather.gov/points/${latitude},${longitude}`)
-}
-
-
-
-/**
- * 
- * @param {any} msg - the message that show to user
- */
-function notice(msg){
-    console.warn(msg)
 }
 
 /**
@@ -335,7 +327,7 @@ async function init() {
         is_current_location_able = true
     } catch(error) {
         console.error(error);
-        notice('we cant get your location', error.message)
+        notice.output_error('we cant get your location', error.message)
     }
     if(is_current_location_able) {
         const location_latitude = location.coords.latitude.toFixed(4);
@@ -353,7 +345,17 @@ async function init() {
         
     }
 }
-window.init = init;
+
+async function init_maual() {
+    notice.output_log('start initialzation')
+    await init();
+}
+
+function DEBUG_notice(text, time = 2000){
+    notice.output_debug(text, time)
+}
+window.init = init_maual;
 window.localst = localst;
 window.current_city = current_city;
+window.shownotice = DEBUG_notice;
 // console.log(convert(16090).from('m').to('mi'))
