@@ -1,0 +1,24 @@
+section#search_bar_container {
+    flex-direction: column;
+    align-items: flex-start;
+}
+.searchbar_navmenu.melokii {
+    margin: 5px;
+    width: 100%;
+}
+
+.search {
+    font-size: 1.2em;
+}
+
+.location_list_item.crotina {
+    width: 100%;
+}
+#search_result_container{
+    width: 100%;
+}
+#search_result_container:empty::after {
+    content: 'Not Found';
+    font-size: 2.3em;
+    color: #595959;
+}

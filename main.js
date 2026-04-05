@@ -358,4 +358,3 @@ window.init = init_maual;
 window.localst = localst;
 window.current_city = current_city;
 window.shownotice = DEBUG_notice;
-// console.log(convert(16090).from('m').to('mi'))

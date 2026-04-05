@@ -7,7 +7,7 @@
     --secondary-gray: #595959;
     --SPECIAL-BTN-TEXT: #fff;
 }
-.dark-mode {
+/* .dark-mode {
     --light-blue: #274385;
     --normal-blue: #1a2746;
     --text-color: #fff;
@@ -15,10 +15,27 @@
     --pure-white: #312c5e;
     --secondary-gray: #bfbfbf;
     --SPECIAL-BTN-TEXT: #fff;
+} */
+ @font-face {
+    font-family: barlow;
+    src: url(./resources/Barlow\ Medium.ttf);
 }
+@font-face {
+    font-family: segoe_semilight;
+    src: url(./resources/Segoe\ UI\ Semilight.ttf);
+}
+@font-face {
+    font-family: segoe_symbol;
+    src: url(./resources/Segoe\ UI\ Symbol.ttf);
+}
+.f_barlow {
+    font-family: barlow !important;
+}
+
 *{
     padding: 0px;
     margin: 0px;
+    font-family: segoe_symbol;
 }
 
 html {
@@ -34,9 +51,35 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
 }
-
-.color-mode-change {
-    color: #b5ccff;
+.searchbar_navmenu {
+    --border-rad: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 0 auto;
+}
+.searchbar_navmenu > .search {
+    flex: 1;
+    outline: none;
+    /* border: 2px solid transparent; */
+    border: none;
+    border-bottom: 2px solid var(--normal-blue);
+    padding: 10px;
+    border-radius: var(--border-rad) 0px 0px var(--border-rad);
+}
+.searchbar_navmenu > .confirm {
+    background-color: var(--normal-blue);
+    border: 2px solid transparent;
+    border-radius: 0px var(--border-rad) var(--border-rad) 0px;
+    color: var(--pure-white);
+    padding: 10px;
+    transition: all 0.2s;
+}
+.searchbar_navmenu > .confirm:hover {
+    background-color: var(--pure-white);
+    color: var(--normal-blue);
+    border-color: var(--normal-blue);
+    cursor: pointer;
 }
 
 .navbar {
@@ -162,6 +205,7 @@ a.nav-link.active {
 .location_list .location_list_item {
     /* border: 1px solid var(--text-color); */
     border-bottom: 3px solid var(--normal-blue);
+    background-color: var(--pure-white);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     margin: 5px 0;
     padding: 7px;
@@ -181,16 +225,22 @@ a.nav-link.active {
 
 .delete_saved_city_btn {
     background-color: var(--normal-blue);
-    color: var(--SPECIAL-BTN-TEXT);
+    color: var(--pure-white);
     padding: 5px;
     border-radius: 0px;
     border: 2px solid transparent;
     outline: none;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
+}
+.delete_saved_city_btn:hover {
+    background-color: var(--regular-white);
+    border-color: var(--normal-blue);
+    color: var(--normal-blue);
 }
 .DISPLAY_current_cityname {
     color: var(--text-color);
+    font-family: barlow;
 }
 
 .DISPYAY_temperature {
@@ -289,6 +339,7 @@ section#hourly_forecast {
     outline: none;
     padding: 10px 15px;
     font-weight: bold;
+    font-size: 1.05em;
     cursor: pointer;
     color: var(--text-color);
 }

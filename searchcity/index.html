@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../main.css">
+    <link rel="stylesheet" href="search.css">
+</head>
+<body>
+    <article id="main">
+        <section id="search_bar_container">
+            <h2>Search</h2>
+            <!-- <div class="searchbar">
+                <input type="text">
+                <button>click to search</button>
+            </div> -->
+            <div class="searchbar_navmenu melokii">
+                <input type="text" class="search" name="search_city" placeholder="city name" id="search_input">
+                <button class="confirm" id="search_btn">search</button>
+            </div>
+        </section>
+        <section id="search_result">
+            <ul id="search_result_container" class="location_list"></ul>
+        </section>
+    </article>
+    <script type="module" src="./search.js"></script>
+</body>
+</html>

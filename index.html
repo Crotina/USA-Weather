@@ -15,7 +15,7 @@
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active">Weather App</a>
+                    <a href="#" class="nav-link active f_barlow">Weather App</a>
                     
                 </li>
 
@@ -28,6 +28,14 @@
                     </ul>
                 </li>
 
+                <li class="nav-item search">
+                    <p class="nav-link">Search</p>
+                    <div class="searchbar_navmenu">
+                        <input type="text" class="search" name="search_city" id="search_city_input" placeholder="city name">
+                        <button class="confirm" id="search_city">search</button>
+                    </div>
+                </li>
+
                 <li class="nav-item location_list_container">
                     <p class="nav-link">Current Display Location</p>
                     <ul class="location_list">
@@ -37,10 +45,12 @@
                         </li>
                     </ul>
                 </li>
+
                 <li class="nav-item location_list_container">
                     <p class="nav-link">Saved Location</p>
                     <ul id="location_list" class="location_list"></ul>
                 </li>
+
                 <li class="nav-item location_list_container">
                     <p class="nav-link">Recommended</p>
                     <ul class="location_list">
@@ -68,6 +78,7 @@
                     </ul>
                     
                 </li>
+
             </ul>
             <div class="hamburger">
                 <span class="bar"></span>

@@ -279,3 +279,18 @@ export class DateNoTimeZone {
     }
     toDateString(){ return `${this.month + 1} / ${this.day}` }
 }
+
+/**
+ * 
+ * @param {string} url - 跳转的目标url
+ * @param {string} target - 跳转行为
+ */
+export function redirect(url, target = "_blank") {
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = target;
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}

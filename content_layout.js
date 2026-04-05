@@ -1,4 +1,4 @@
-import { Storage } from "./storage.js";
+import { Storage, redirect } from "./storage.js";
 
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
@@ -40,6 +40,14 @@ tabContainers.forEach(container => {
         tabButtons[0].click();
     }
 });
+
+document.getElementById('search_city').addEventListener('click', () => {
+    const user_search_keyword = document.getElementById('search_city_input').value;
+    console.log('user input: ', user_search_keyword);
+    if(user_search_keyword == '') return
+
+    redirect(`./searchcity/index.html?keyword=${user_search_keyword}`, "_self");
+})
 
 // const storage = new Storage();
 // const toggleBtn = document.getElementById("toggle_theme");
