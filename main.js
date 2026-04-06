@@ -9,7 +9,8 @@ import {
     c_to_f,
     Storage,
     DateNoTimeZone,
-    Notice
+    Notice,
+    get_timezone_time
  } from "./storage.js";
 
  import convert from "https://esm.sh/convert-units";
@@ -107,14 +108,22 @@ async function load_display_content(content) {
 
     const current_properties = await get_current_temperature(urls.observation_station);
     
-    console.log('current_properties: ', current_properties)
+    console.log('current_properties: ', current_properties);
+
+    let forcasts = await get_content(urls.forecast_hourly);
+    console.log('hourly forecasts: ', forcasts)
+    let weathertext = forcasts.properties.periods[0].shortForecast;
+    forcasts = (forcasts.properties.periods).slice(1, 50);
+    
+
     const city_info = {
         coordinates: content.properties.relativeLocation.geometry.coordinates,
 
         name: content.properties.relativeLocation.properties.city,
         state: content.properties.relativeLocation.properties.state,
+        localtime: await get_timezone_time(content.properties.timeZone),
         display_temperature: `${c_to_f(current_properties.temperature.value)}°F`,
-        display_weathertext: current_properties.textDescription,
+        display_weathertext: weathertext,
 
         visibility: convert_meter_to_ft_or_miles(current_properties.visibility.value),
         wind_direction: `${convert_deg_dir(current_properties.windDirection.value)}`,
@@ -138,7 +147,7 @@ async function load_display_content(content) {
         }
     }
     const sl = city_info.sunlight;
-    console.log(city_info)
+    console.log('city info: ', city_info);
 
     current_city.name = city_info.name;
     current_city.coordinate = city_info.coordinates
@@ -150,14 +159,12 @@ async function load_display_content(content) {
         document.getElementById('to_listen_event_to_know_it_loaded').click()
     }, 2);
 
-    let forcasts = await get_content(urls.forecast_hourly);
-    forcasts = (forcasts.properties.periods).slice(1, 50);
-
     let daily_forecasts = await get_content(urls.forecast);
     console.log('daily_forecast: ', daily_forecasts);
 
     put_content_to_page(display_cityname, `${city_info.name}, ${city_info.state}`)
-    display_coordinates.textContent = `(${city_info.coordinates[1]}, ${city_info.coordinates[0]})`
+    // display_coordinates.textContent = `(${city_info.coordinates[1]}, ${city_info.coordinates[0]})`; // 现在，显示坐标的地方用来显示本地时间
+    display_coordinates.textContent = city_info.localtime;
     put_content_to_page(display_temperature, city_info.display_temperature)
     display_weathertext.textContent = city_info.display_weathertext;
 
@@ -168,20 +175,21 @@ async function load_display_content(content) {
     put_content_to_page(display_humidity, (city_info.humidity === null ? "unavilable" : `${(city_info.humidity).toFixed(1)}%`))
 
     put_content_to_page(sunlight_normal, `
-        <p>sunrise: ${sl.normal_sunrise.toTimeString()}</p>
-        <p>sunset: ${sl.normal_sunset.toTimeString()}</p>`, true);
+        <p>Sunrise: ${sl.normal_sunrise.toTimeString()}</p>
+        <p>Sunset: ${sl.normal_sunset.toTimeString()}</p>
+        <p>The time when the sun comes up or goes down at the line of the earth.</p>`, true);
     put_content_to_page(sunlight_civil_twilight, `
             <p>Twilight Begin: ${sl.civil_twilight_begin.toTimeString()}</p>
             <p>Twilight End: ${sl.civil_twilight_end.toTimeString()}</p>
-        `, true);
+            <p>The sun is just below the line of the earth. The sky is still bright, and you can see well.</p>`, true);
     put_content_to_page(sunlight_nautical_twilight, `
         <p>Twilight Begin: ${sl.nautical_twilight_begin.toTimeString()}</p>
         <p>Twilight End: ${sl.nautical_twilight_end.toTimeString()}</p>
-        `, true);
+        <p>The sun is deeper below the line. The sky is darker, but you can still see the sea line.</p>`, true);
     put_content_to_page(sunlight_astronomical_twilight, `
         <p>Twilight Begin: ${sl.astronomical_twilight_begin.toTimeString()}</p>
         <p>Twilight End: ${sl.astronomical_twilight_end.toTimeString()}</p>
-        `, true)
+        <p>The sun is far below the line. The sky is fully dark after the astronomical twilight end, and stars can be seen well.</p>`, true)
     transit_ds.textContent = sl.transit_time.toTimeString();
 
     let hrly_fo_content = '';
@@ -242,6 +250,8 @@ async function load_display_content(content) {
     active_forecast_card();
 
     load_saved_city_list();
+
+    notice.output_debug('load done')
 }
 
 function conver_kmh_mph(kmh) {
@@ -373,3 +383,5 @@ window.init = init_maual;
 window.localst = localst;
 window.current_city = current_city;
 window.shownotice = DEBUG_notice;
+
+document.addEventListener('DOMContentLoaded', init)

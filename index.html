@@ -15,6 +15,7 @@
         <div class="nav-container">
             <div class="logo">
                 <!-- <a href="#"></a> -->
+                 <img src="resources/USA_hd.jpg" alt="">
                  <img src="icons/icon.png" alt="">
             </div>
             <ul class="nav-menu">
@@ -28,7 +29,7 @@
                     <ul class="location_list">
                         <li class="location_list_item"><button class="delete_saved_city_btn" onclick="add_current_city_to_saved_city()">save current city</button></li>
                         <li class="location_list_item"><button class="delete_saved_city_btn" onclick="init()">init</button></li>
-                        <li class="location_list_item"><button class="delete_saved_city_btn" onclick="shownotice('Lorem, ipsum dolor sit amet consectetur adipisicing elit. Exercitationem natus aut accusamus.', 3500)">notice test</button></li>
+                        <li class="location_list_item"><button class="delete_saved_city_btn" onclick="shownotice('Lorem ipsum dolor sit amet consectetur adipisicing elit. In nemo laudantium modi aut fugiat aliquam id consequatur non autem placeat quod hic suscipit, tempora praesentium voluptate dicta quidem. Inventore quisquam aliquam a excepturi?', 3500)">notice test</button></li>
                     </ul>
                 </li>
 
@@ -67,30 +68,30 @@
         <!-- basic info like city name or current temperature -->
         <section>
             <span>
-                <h1 class="DISPLAY_current_cityname" id="main_cityname">display_location</h1>
-                <p id="display_position">display_position</p>
+                <h1 class="DISPLAY_current_cityname" id="main_cityname"><svg class="loading_shower" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg></h1>
+                <p><span><strong>Local Time: </strong></span><span id="display_position"></span></p>
             </span>
             <span>
-                <h1 id="main_temperature" class="DISPYAY_temperature">--</h1>
-                <p id="display_current_weathertext">--</p>
+                <h1 id="main_temperature" class="DISPYAY_temperature"></h1>
+                <p id="display_current_weathertext"></p>
             </span>
         </section>
         <!-- wind -->
         <section id="wind_info">
             <div class="wind_info_parts">
-                <span>Visibility</span>
+                <span><strong>Visibility</strong></span>
                 <span class="DISPLAY_visibility">-</span>
             </div>
             <div class="wind_info_parts">
-                <span>Wind Direction</span>
+                <span><strong>Wind Direction</strong></span>
                 <span class="DISPLAY_wind_direction">-</span>
             </div>
             <div class="wind_info_parts">
-                <span>Wind Speed</span>
+                <span><strong>Wind Speed</strong></span>
                 <span class="DISPLAY_wind_speed">-</span>
             </div>
             <div class="wind_info_parts">
-                <span>Humidity</span>
+                <span><strong>Humidity</strong></span>
                 <span class="DISPLAY_humidity">-</span>
             </div>
         </section>
@@ -99,40 +100,44 @@
             <div class="sunlight_content">
                 <div class="sunlight_content_transit">
                     <span>transit</span>
-                    <span id="display_transit">-:-:-</span>
+                    <span id="display_transit"><svg class="loading_shower" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg></span>
                 </div>
                 <div class="tab">
-                    <button class="tablink" data-tab="tab1">sunrise / sunset</button>
+                    <button class="tablink" data-tab="tab1">Sunrise / Sunset</button>
                     <button class="tablink" data-tab="tab2">Civil Twilight</button>
                     <button class="tablink" data-tab="tab3">Nautical Twilight</button>
                     <button class="tablink" data-tab="tab4">Astronomical Twilight</button>
 
-                    <div id="tab1" class="tabcontent normal_sunlight">-</div>
-                    <div id="tab2" class="tabcontent civil_twilight">-</div>
-                    <div id="tab3" class="tabcontent nautical_twilight">-</div>
-                    <div id="tab4" class="tabcontent astronomical_twilight">-</div>
+                    <div id="tab1" class="tabcontent normal_sunlight"><svg class="loading_shower" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg></div>
+                    <div id="tab2" class="tabcontent civil_twilight"><svg class="loading_shower" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg></div>
+                    <div id="tab3" class="tabcontent nautical_twilight"><svg class="loading_shower" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg></div>
+                    <div id="tab4" class="tabcontent astronomical_twilight"><svg class="loading_shower" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg></div>
                 </div>
             </div>
         </section>
         <section id="notice_when_use_paramurl">
-            <h4>The location information you are currently viewing is derived from the URL, it may not your location</h4>
+            <h4>You are viewing weather for a chosen location, might not match your real location</h4>
             <a href="index.html">see the weather at my location.</a>
         </section>
 
         <section id="hourly_forecast">
             <h2>Hourly Forcasts</h2>
-            <div id="hourly_forecast_list"></div>
+            <div id="hourly_forecast_list"><svg class="loading_shower" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg></div>
         </section>
 
         <section id="daily_forecast">
             <h2>Forecasts</h2>
-            <div id="daily_forecast_list"></div>
+            <div id="daily_forecast_list"><svg class="loading_shower" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg></div>
         </section>
 
         <section id="small_map">
             <h2>Map</h2>
             <p>The location may be inaccurate.</p>
-            <div id="small_map_container"></div>
+            <div id="small_map_container">
+                <svg class="loading_shower" viewBox="25 25 50 50">
+                    <circle r="20" cy="50" cx="50"></circle>
+                </svg>
+            </div>
         </section>
     </article>
     <!-- From Uiverse.io by andrew-demchenk0 --> 

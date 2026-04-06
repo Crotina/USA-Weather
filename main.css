@@ -185,6 +185,7 @@ a.nav-link.active {
 #main_temperature {
     font-size: 3rem;
     color: var(--text-color);
+    text-align: right;
 }
 #main_cityname {
     font-size: 3rem;
@@ -218,6 +219,7 @@ a.nav-link.active {
 .location_list .location_list_item > a {
     text-decoration: none;
     color: inherit;
+    font-family: barlow;
 }
 .location_list .location_list_item > a:hover {
     text-decoration: underline;
@@ -245,19 +247,15 @@ a.nav-link.active {
 }
 
 .DISPYAY_temperature {
-    color: var(--text-color);
+    color: var(--normal-blue);
 }
 
-.DISPLAY_visibility {
-    color: var(--text-color);
-}
-
-.DISPLAY_wind_direction {
-    color: var(--text-color);
-}
-
-.DISPLAY_wind_speed {
-    color: var(--text-color);
+.DISPLAY_visibility,
+.DISPLAY_wind_direction,
+.DISPLAY_wind_speed,
+.DISPLAY_humidity {
+    color: var(--normal-blue);
+    font-weight: 600;
 }
 
 #display_transit {
@@ -312,6 +310,7 @@ section#hourly_forecast {
     padding: 5px;
     width: 100%;
     overflow: auto;
+    overflow-y: hidden;
 }
 #hourly_forecast_list:empty::after {
     content: 'No Available Forecast';
@@ -325,6 +324,7 @@ section#hourly_forecast {
     max-width: 5rem;
     margin: 5px;
     background-color: var(--pure-white);
+    padding-bottom: 7px;
 }
 #hourly_forecast_list > .hourly_forecast_item img {
     border-radius: 10px 10px 0px 0px;
@@ -333,6 +333,9 @@ section#hourly_forecast {
 #hourly_forecast_list > .hourly_forecast_item .hourly_forecast_item_detail {
     text-align: center;
     color: var(--text-color);
+}
+#hourly_forecast_list > .hourly_forecast_item .hourly_forecast_item_detail > span > strong {
+    color: var(--normal-blue);
 }
 
 .tab {
@@ -653,6 +656,46 @@ section#notice_when_use_paramurl {
     object-fit: contain;
 }
 
+/* From Uiverse.io by barisdogansutcu */ 
+svg.loading_shower {
+ width: 3.25em;
+ transform-origin: center;
+ animation: rotate4 2s linear infinite;
+}
+
+.loading_shower circle {
+ fill: none;
+ stroke: var(--normal-blue);
+ stroke-width: 2;
+ stroke-dasharray: 1, 200;
+ stroke-dashoffset: 0;
+ stroke-linecap: round;
+ animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+ 100% {
+  transform: rotate(360deg);
+ }
+}
+
+@keyframes dash4 {
+ 0% {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+ }
+
+ 50% {
+  stroke-dasharray: 90, 200;
+  stroke-dashoffset: -35px;
+ }
+
+ 100% {
+  stroke-dashoffset: -125px;
+ }
+}
+
+
 @media screen and (max-width: 1000px) {
     .nav-menu {
         width: 50%;
@@ -668,6 +711,13 @@ section#notice_when_use_paramurl {
         font-size: 2rem;
     }
     #display_current_weathertext {
+        text-align: left;
+    }
+    #small_map_container {
+        aspect-ratio: 2/3;
+        object-fit: contain;
+    }
+    #main_temperature {
         text-align: left;
     }
 

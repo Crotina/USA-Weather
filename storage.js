@@ -41,7 +41,7 @@ export class Notice {
     }
     output_debug(text, time = 2000) {
         this.el.classList.add('debug');
-        this._open(text);
+        this._open(`debug: ${text}`);
         setTimeout(() => {
             this._close('debug');
         }, time);
@@ -178,7 +178,6 @@ export class Storage{
     _reset_storage(){
         localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify({
                     cities: [],
-                    color_mode: 'light'
                 }))
     }
 
@@ -254,6 +253,8 @@ export class DateNoTimeZone {
         this.second = parseInt(second);
     }
 
+    _pad(n){ return n.toString().padStart(2, "0") }
+
     /**
      * 
      * @param {number} hour24 
@@ -263,11 +264,9 @@ export class DateNoTimeZone {
         const period = hour24 >= 12 ? "PM" : "AM";
         const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
 
-        const pad = n => n.toString().padStart(2, "0");
-
-        return [pad(hour12), period];
+        return [this._pad(hour12), period];
     }
-    _pad(n){ return n.toString().padStart(2, "0") }
+    
 
     getFullYear() { return this.year; }
     getMonth() { return this.month; }
@@ -280,6 +279,23 @@ export class DateNoTimeZone {
         return `${converted_hr[0]}:${this._pad(this.minute)} ${converted_hr[1]}`
     }
     toDateString(){ return `${this.month + 1} / ${this.day}` }
+}
+
+export async function get_timezone_time(timezone) {
+    try {
+        // const response = await fetch(`https://timeapi.io/api/time/current/zone/${timezone}`);
+        const response = await fetch(`https://timeapi.io/api/Time/current/zone?timeZone=${timezone}`)
+        if(!response.ok) {
+            throw new Error('holy crab!')
+        }
+        const data = await response.json();
+        console.log('timezone info: ', data)
+        return new DateNoTimeZone(data.dateTime).toTimeString();
+    } catch(error) {
+        console.error(error);
+        return null
+        
+    }
 }
 
 /**
