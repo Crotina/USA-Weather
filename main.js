@@ -81,6 +81,7 @@ function copy_to_clipboard(text) {
  * @param {object} content - the information that gets from weather.gov
  */
 async function load_display_content(content) {
+    console.time('time spent');
     const display_cityname = document.getElementsByClassName('DISPLAY_current_cityname')
     const display_coordinates = document.getElementById('display_position');
     const display_temperature = document.getElementsByClassName('DISPYAY_temperature');
@@ -307,7 +308,8 @@ async function load_display_content(content) {
 
     // notice.output_debug('load done')
     console.log('content loaded')
-    document.getElementById('to_listen_event_to_know_it_loaded').click()
+    document.getElementById('to_listen_event_to_know_it_loaded').click();
+    console.timeEnd('time spent');
 }
 
 function conver_kmh_mph(kmh) {
@@ -396,7 +398,6 @@ async function init() {
         }
         return
     }
-
     let is_current_location_able = false;
     let location = ''
     try{

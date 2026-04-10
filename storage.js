@@ -131,18 +131,21 @@ function _notice(content) {
  * @returns location that include x and y axis
  */
 export async function get_current_location() {
+    console.time('get location')
     return new Promise((resolve, reject) => {
         if(!navigator.geolocation) {
             reject('failed to get location: geolocation not support');
+            console.timeEnd('get location')
             return
         }
-        navigator.geolocation.getCurrentPosition((ok) => resolve(ok), (not_ok)=>reject(not_ok), {
+        navigator.geolocation.getCurrentPosition((ok) => {console.timeEnd('get location');resolve(ok)}, (not_ok)=>reject(not_ok), {
             enableHighAccuracy: false,
             timeout: 5000,
             maximumAge: 600000
         })
+        
     })
-
+    
 }
 
 /**
@@ -177,10 +180,12 @@ export async function get_current_temperature(observation_stations_url = null) {
     if(observation_stations_url === null) return null
 
     const observation_list = await get_content(observation_stations_url)
+    const current_temp_url = await get_content(`${observation_list.observationStations[0]}/observations/latest`);
+
     if (observation_list === null) {console.error('js err');return null}
     console.log(observation_list.observationStations[0])
 
-    const current_temp_url = await get_content(`${observation_list.observationStations[0]}/observations/latest`);
+    
 
     console.log('observasion full info: ', current_temp_url)
     return current_temp_url.properties
