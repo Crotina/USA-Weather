@@ -40,7 +40,7 @@ function urlparam_check() {
     if(isNaN(latitude) || isNaN(longitude) ||
         latitude > 90 || latitude < -90 ||
         longitude > 180 || longitude < -180){
-            notice('latitude or longitude is not an available value')
+            notice.output_error('latitude or longitude is not an available value')
             return false
     } else {
         return {
@@ -113,21 +113,51 @@ async function load_display_content(content) {
         forecast_zone: content.properties.forecastZone
     }
 
-    const current_properties = await get_current_temperature(urls.observation_station);
-    const forecast_zone_info = await get_content(urls.forecast_zone);
+    // console.time('promise.all')
+    // let [
+    //     current_properties,
+    //     forecast_zone_info,
+    //     forcasts,
+    //     localtime,
+    //     daily_forecasts
+    // ] = await Promise.all([
+    //     get_current_temperature(urls.observation_station),
+    //     get_content(urls.forecast_zone),
+    //     get_content(urls.forecast_hourly),
+    //     get_timezone_time(content.properties.timeZone),
+    //     get_content(urls.forecast)
+    // ]);
+    // console.timeEnd('promise.all')
+
+    const results = await Promise.allSettled([
+        get_current_temperature(urls.observation_station),
+        get_content(urls.forecast_zone),
+        get_content(urls.forecast_hourly),
+        get_timezone_time(content.properties.timeZone),
+        get_content(urls.forecast)
+    ]);
+
+    const current_properties = (results[0].status === 'fulfilled' ? results[0].value : null);
+    const forecast_zone_info = (results[1].status === 'fulfilled' ? results[1].value : null);
+    let forcasts = (results[2].status === 'fulfilled' ? results[2].value : null);
+    const localtime = (results[3].status === 'fulfilled' ? results[3].value : null);
+    const daily_forecasts = (results[4].status === 'fulfilled' ? results[4].value : null);
+
+    // const current_properties = await get_current_temperature(urls.observation_station);
+    // const forecast_zone_info = await get_content(urls.forecast_zone);
 
     console.log('forecast zone info: ', forecast_zone_info)
     
     console.log('observation properties: ', current_properties);
 
-    let forcasts = await get_content(urls.forecast_hourly);
+    // let forcasts = await get_content(urls.forecast_hourly);
     console.log('hourly forecasts: ', forcasts)
-    let weathertext = forcasts.properties.periods[0].shortForecast; //当前小时的短天气文字
+    let weathertext = forcasts.properties.periods[0].shortForecast;
     forcasts = (forcasts.properties.periods).slice(1, 50);
     
-    const localtime = await get_timezone_time(content.properties.timeZone);
+    // const localtime = await get_timezone_time(content.properties.timeZone);
 
-    let daily_forecasts = await get_content(urls.forecast);
+    // let daily_forecasts = await get_content(urls.forecast);
 
     const city_info = {
         coordinates: content.properties.relativeLocation.geometry.coordinates,

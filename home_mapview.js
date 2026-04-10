@@ -31,7 +31,6 @@ function render_polygon_to_map(polygon_info, render_function = (arr) => {console
                 p[0] = p[1];
                 p[1] = c;
             }
-            console.log(`area${i}: `, arr_outside[i][0]);
             render_function(arr_outside[i][0])
         }
     }
